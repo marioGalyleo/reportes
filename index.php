@@ -1,6 +1,6 @@
 <?php
 
- /*** error reporting on ***/
+ /***    error reporting on ***/
  error_reporting(E_ALL);
 
  /*** define the site path ***/

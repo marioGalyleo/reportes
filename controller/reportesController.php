@@ -13,6 +13,9 @@ public function index()
 	$usuario = DAOFactory::getPersonasDAO()->getUserInPlatform($platform,$user_id_in_moodle);
 	$cursos_usuarios = DAOFactory::getCursosDAO()->getCursosByUsuario($usuario->id);
 	
+	// redireccionamos al 404 si usuario no existe
+	 
+	
 	if(isset($PARAMS['quiz'])){
 		$id_quiz = $PARAMS['quiz'];
 		
@@ -93,6 +96,7 @@ public function semanal(){
 	$this->registry->template->contenido_logro = $contenido_logro;
 	$this->registry->template->nombre_curso = $curso->nombre;
 	$this->registry->template->nombre_grupo = $grupo->nombre;
+	$this->registry->template->institucion = 'utfsm';
 	
 	// esto es lo necesario para la matriz de desempeño, TODO: deber’a tener su vista propia?
 	$quizes_en_curso = DAOFactory::getQuizesDAO()->queryCerradosByIdCurso($curso->id);
@@ -114,7 +118,7 @@ public function semanal(){
 	$tiempo_dedicado = DAOFactory::getLogsDAO()->getTiempoEntreFechas($fecha_fin);
 	
 	//finally
-	$this->registry->template->show('reportes/semanal');
+	$this->registry->template->show('reportes/alumno');
 	
 }
 
@@ -132,7 +136,7 @@ public function profesor(){
 	$notas_grupo = DAOFactory::getIntentosDAO()->getNotasNombreGrupo($quiz->id,$grupo->id);
 	$contenido_logro = DAOFactory::getIntentosDAO()->getLogroPorContenidoGrupo($quiz->id);
         //$nota_maxima= DAOFactory::getNotasDAO()->getMaxNotaInQuiz($quiz->id);
-
+	
 	//enviamos los siguientes valores a la vista
 	$this->registry->template->titulo = 'Reporte Profesor';
 	$this->registry->template->usuario = $usuario;
@@ -167,9 +171,17 @@ public function profesor(){
 	
 }
 
+//cgajardo: funci—n para probar el handler de google chart
 public function ensayo(){							
 										
 	$this->registry->template->show('reportes/ensayo');
+}
+
+//cgajardo: funci—n mostrar el tiempo que pasa un alumno entre dos fechas
+public function tiempo(){
+	$tiempo = DAOFactory::getLogsDAO()->getTiempoEntreFechas($fecha_fin, $fecha_inicio);
+	$this->registry->template->tiempo = $tiempo; 
+	$this->registry->template->show('reportes/tiempo');
 }
 
 }
